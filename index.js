@@ -5,7 +5,7 @@ const expo = new Expo();
 
 const express = require('express');
 const ap = express();
-const port = 3000; // Choose a suitable port number
+const port = process.env.PORT||3000; // Choose a suitable port number
 ap.use(express.json()); // Parse JSON bodies
 ap.use(express.urlencoded({ extended: true })); 
 
