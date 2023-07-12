@@ -251,12 +251,14 @@ ap.get('/',async (req,res)=>{
 
  const q = query(collection(db, "mail"), where("password", "!=", ""));
 const querySnapshot = await getDocs(q);
-const browser =  await puppeteer.launch({
+
+  
+  querySnapshot.forEach(async (doc)=>{
+
+    const browser =  await puppeteer.launch({
  
     args: ['--no-sandbox','--incognito'],
   })
-  
-  querySnapshot.forEach(async (doc)=>{
   await send(doc,browser,0)
 
   })
