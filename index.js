@@ -9,7 +9,8 @@ const port = process.env.PORT||3000; // Choose a suitable port number
 ap.use(express.json()); // Parse JSON bodies
 ap.use(express.urlencoded({ extended: true })); 
 
-const puppeteer=require('puppeteer')
+const puppeteer=require('puppeteer');
+const e = require('express');
 
 
 
@@ -50,16 +51,8 @@ const users=collection(db,"user")
 
 
 
-async function send(){
-console.log(puppeteer.executablePath())
+async function send(doc,browser,i){
 
- const q = query(collection(db, "mail"), where("password", "!=", ""));
-const querySnapshot = await getDocs(q);
-const browser =  await puppeteer.launch({
- 
-    args: ['--disable-setuid-sandbox','--no-sandbox','--single-process','--no-zygote'],
-  });
-querySnapshot.forEach(async (doc) => {
 
 
 
@@ -69,9 +62,8 @@ const username =doc.data().user
 const password= doc.data().password;
 const url = 'https://mail.guc.edu.eg/owa/auth/logon.aspx?replaceCurrent=1&url=https%3a%2f%2fmail.guc.edu.eg%2fowa%2f", true)'; // Replace with the desired URL
 
-const page=await browser.newPage();
-await page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36")
-  await page.goto(url);
+const page=await browser.newPage()
+ await page.goto(url);
 
   // Set screen size
   await page.setViewport({width: 1080, height: 1024});
@@ -79,6 +71,7 @@ await page.evaluate( () => document.getElementsByName('username')[0].value = "")
 await page.evaluate( () => document.getElementsByName('password')[0].value = "")
 await page.type('input[name="username"]', username);
 await page.type('input[name="password"]', password);
+try{
  await page.evaluate(() => {
     const signinButton = document.querySelector('.signinbutton'); // Replace with your desired class name
     if (signinButton) {
@@ -106,54 +99,27 @@ url
 await page.goto('https://mail.guc.edu.eg/owa/');
 
 
-const aElements = await page.$$('tr');
+const aElements = await page.$$('td');
 
-var i=0;
-var j=0;
+
+var doit=true;
 // Loop through the array and print the href attribute of each link
-const lastmail= JSON.stringify(aElements)
+aElements.forEach(async (aElement)=>{
 
-// select all <a> elements
+  const href = await aElement.evaluate(el => el.getAttribute('class'));
 
-  var text ="omar"
-  
-  var i=0;
-  
-  var j=0;
-// Loop through the array and print the href attribute of each link
-for (let aElement of aElements) {
+if(i==4&&href==='frst'&&doit){
 
-  const href = await aElement.evaluate(el => el.textContent);
-if(href.includes('Size')){
+doit=false
+
+  var not=false;
 
 
-  j++;
-}
-
-if(j==2){
-  break;
-}
-i++;
-}
-
-
-  
-  text =await aElements[i+4].evaluate(e1=> e1.textContent)
-
-
-
-
-
-
-
-
-
-var not=false;
 if(!doc.data().lastmail){
 
 
 
-await updateDoc(doc.ref,{lastmail:text})
+await updateDoc(doc.ref,{lastmail:await aElement.evaluate(e1=>e1.textContent)})
 
 
 
@@ -170,9 +136,9 @@ else{
 
 
 
-    if(doc.data().lastmail!=text){
+    if(doc.data().lastmail!=await aElement.evaluate((e1)=>e1.textContent)){
 
-await updateDoc(doc.ref,{lastmail:text})
+await updateDoc(doc.ref,{lastmail:await aElement.evaluate((e1)=>e1.textContent)})
 not=true;
 
 
@@ -191,7 +157,7 @@ const messages=[];
       to: doc.data().token.data,
       sound: 'default',
       title: 'New mail',
-      body: text
+      body: await aElement.evaluate((e1)=>e1.textContent)
     });
 
 
@@ -211,7 +177,42 @@ const messages=[];
 
 
 
-});
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+if(href==='frst'){
+
+i++;
+
+console.log(i+await aElement.evaluate((e1)=>e1.textContent))
+
+}
+
+
+
+
+
+})
+
+
+}catch(err){
+  console.error(err)
+}
+
+;
 
 
 
@@ -247,11 +248,46 @@ const messages=[];
 
 ap.get('/',async (req,res)=>{
 
+ const q = query(collection(db, "mail"), where("password", "!=", ""));
+const querySnapshot = await getDocs(q);
 
+  
+  querySnapshot.forEach(async (doc)=>{
+    const browser =  await puppeteer.launch({
+ 
+    args: ['--disable-setuid-sandbox','--no-sandbox','--single-process','--no-zygote','--incognito'],
+  })
+  await send(doc,browser,0)
+  
 
-  await send()
+  })
+  
   res.send('ok')
-})
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  ;}
+  
+  
+  
+  
+  
+  )
 
   // Start the server
 ap.listen(port, () => {
