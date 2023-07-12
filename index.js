@@ -253,7 +253,7 @@ const messages=[];
 
 
 
-
+browser.close()
 
 
 
