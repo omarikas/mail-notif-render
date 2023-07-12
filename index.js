@@ -208,6 +208,7 @@ console.log(i+await aElement.evaluate((e1)=>e1.textContent))
 })
 
 
+
 }catch(err){
   console.error(err)
 }
@@ -250,15 +251,14 @@ ap.get('/',async (req,res)=>{
 
  const q = query(collection(db, "mail"), where("password", "!=", ""));
 const querySnapshot = await getDocs(q);
-
+const browser =  await puppeteer.launch({
+ 
+    args: ['--no-sandbox','--incognito'],
+  })
+  const context=await browser.createIncognitoBrowserContext()
   
   querySnapshot.forEach(async (doc)=>{
-    const browser =  await puppeteer.launch({
- 
-    args: ['--disable-setuid-sandbox','--no-sandbox','--single-process','--no-zygote','--incognito'],
-  })
-  await send(doc,browser,0)
-  
+  await send(doc,context,0)
 
   })
   
