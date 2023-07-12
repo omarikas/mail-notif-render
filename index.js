@@ -255,10 +255,9 @@ const browser =  await puppeteer.launch({
  
     args: ['--no-sandbox','--incognito'],
   })
-  const context=await browser.createIncognitoBrowserContext()
   
   querySnapshot.forEach(async (doc)=>{
-  await send(doc,context,0)
+  await send(doc,browser,0)
 
   })
   
