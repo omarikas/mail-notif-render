@@ -49,20 +49,6 @@ const users=collection(db,"user")
 
 
 
-  // Start the server
-ap.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
-
-
-
-ap.get('/',async (req,res)=>{
-
-
-
-  await send()
-  res.send('ok')
-})
 
 async function send(){
 console.log(puppeteer.executablePath())
@@ -259,4 +245,17 @@ browser.close()
 
 
 }
-module.exports={send}
+
+
+ap.get('/',async (req,res)=>{
+
+
+
+  await send()
+  res.send('ok')
+})
+
+  // Start the server
+ap.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
