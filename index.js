@@ -268,7 +268,7 @@ ap.get('/',async (req,res)=>{
  const q = query(collection(db, "mail"), where("password", "!=", ""));
 const querySnapshot = await getDocs(q);
 const browser =  await puppeteer.launch({
- headless:false,
+ 
     args: ['--no-sandbox','--incognito'],
   })
   var j=0;
