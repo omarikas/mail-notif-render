@@ -263,13 +263,13 @@ ap.get('/',async (req,res)=>{
 const querySnapshot = await getDocs(q);
 
   var j=0;
-  
-  querySnapshot.forEach(async (doc)=>{
-    const browser =  await puppeteer.launch({
+  const browser =  await puppeteer.launch({
 
     args: ['--no-sandbox','--incognito'],
   })
-  await send(doc,browser,0,j)
+  querySnapshot.forEach(async (doc)=>{
+    const context=await browser.createIncognitoBrowserContext();
+  await send(doc,context,0,j)
 
   })
   
