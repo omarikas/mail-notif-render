@@ -51,7 +51,7 @@ const users=collection(db,"user")
 
 
 
-async function send(doc,browser,i){
+async function send(doc,browser,i,j){
 
 
 
@@ -60,10 +60,22 @@ async function send(doc,browser,i){
 const username =doc.data().user
 
 const password= doc.data().password;
+
+
 const url = 'https://mail.guc.edu.eg/owa/auth/logon.aspx?replaceCurrent=1&url=https%3a%2f%2fmail.guc.edu.eg%2fowa%2f", true)'; // Replace with the desired URL
 
 const page=await browser.newPage()
+// Clear the cookies and cache of the page
+
+
  await page.goto(url);
+const element = await page.evaluate(() => document.getElementById("Io"));
+
+if(element){
+
+  await element.click()
+  await page.waitForNavigation()
+}
 
   // Set screen size
   await page.setViewport({width: 1080, height: 1024});
@@ -176,7 +188,7 @@ const messages=[];
     
 
 
-
+browser.close();
 
 
 
@@ -197,7 +209,6 @@ if(href==='frst'){
 
 i++;
 
-console.log(i+await aElement.evaluate((e1)=>e1.textContent))
 
 }
 
@@ -206,7 +217,6 @@ console.log(i+await aElement.evaluate((e1)=>e1.textContent))
 
 
 })
-
 
 
 }catch(err){
@@ -252,14 +262,14 @@ ap.get('/',async (req,res)=>{
  const q = query(collection(db, "mail"), where("password", "!=", ""));
 const querySnapshot = await getDocs(q);
 
+  var j=0;
   
   querySnapshot.forEach(async (doc)=>{
-
     const browser =  await puppeteer.launch({
- 
+ headless:false,
     args: ['--no-sandbox','--incognito'],
   })
-  await send(doc,browser,0)
+  await send(doc,browser,0,j)
 
   })
   
