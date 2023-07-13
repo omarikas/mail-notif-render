@@ -266,7 +266,7 @@ const querySnapshot = await getDocs(q);
   
   querySnapshot.forEach(async (doc)=>{
     const browser =  await puppeteer.launch({
- headless:false,
+
     args: ['--no-sandbox','--incognito'],
   })
   await send(doc,browser,0,j)
