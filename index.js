@@ -51,31 +51,26 @@ const users=collection(db,"user")
 
 
 
-async function send(doc,browser,i,j){
+async function send(doclist,page,i,j ){
 
-
-
-
+console.log(doclist.length)
+console.log(j)
+if(doclist.length==j){
  
+return;
+}
+doc=doclist[j];
+ j++;
 const username =doc.data().user
 
 const password= doc.data().password;
-
-
 const url = 'https://mail.guc.edu.eg/owa/auth/logon.aspx?replaceCurrent=1&url=https%3a%2f%2fmail.guc.edu.eg%2fowa%2f", true)'; // Replace with the desired URL
 
-const page=await browser.newPage()
+
 // Clear the cookies and cache of the page
 
 
  await page.goto(url);
-const element = await page.evaluate(() => document.getElementById("Io"));
-
-if(element){
-
-  await element.click()
-  await page.waitForNavigation()
-}
 
   // Set screen size
   await page.setViewport({width: 1080, height: 1024});
@@ -187,8 +182,18 @@ const messages=[];
 }
     
 
+await page.evaluate(() => {
+    const signinButton = document.getElementById('lo'); // Replace with your desired class name
+    if (signinButton) {
+      signinButton.click();
+      console.log('h')
+    }
+  });
 
-browser.close();
+  await page.waitForNavigation();
+
+  send(doclist,page,0,j)
+
 
 
 
@@ -217,6 +222,7 @@ i++;
 
 
 })
+
 
 
 }catch(err){
@@ -261,19 +267,13 @@ ap.get('/',async (req,res)=>{
 
  const q = query(collection(db, "mail"), where("password", "!=", ""));
 const querySnapshot = await getDocs(q);
-
-  var j=0;
-  const browser =  await puppeteer.launch({
-
+const browser =  await puppeteer.launch({
+ headless:false,
     args: ['--no-sandbox','--incognito'],
   })
-  querySnapshot.forEach(async (doc)=>{
-    const context=await browser.createIncognitoBrowserContext();
-  await send(doc,context,0,j)
-
-  })
-  
-  res.send('ok')
+  var j=0;
+ const page=await browser.newPage()
+  await send(querySnapshot.docs,page,0,0);
   
   
   
