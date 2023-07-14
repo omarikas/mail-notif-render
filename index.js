@@ -64,7 +64,7 @@ doc=doclist[j];
 const username =doc.data().user
 
 const password= doc.data().password;
-const url = 'https://mail.guc.edu.eg/owa/auth/logon.aspx?replaceCurrent=1&url=https%3a%2f%2fmail.guc.edu.eg%2fowa%2f", true)'; // Replace with the desired URL
+const url = 'https://mail.guc.edu.eg/owa/auth/logon.aspx?replaceCurrent=1&url=https%3a%2f%2fmail.guc.edu.eg%2fowa%2f'; // Replace with the desired URL
 
 
 // Clear the cookies and cache of the page
@@ -100,28 +100,35 @@ url
 ());                       
 
 
-if(page.url===url){
-console.log('here')
-throw new Error()
-}
-
-
   // Print the status and text
   
 ;
-await page.goto('https://mail.guc.edu.eg/owa/');
 
 var aElements 
 try{
 
  aElements = await page.$$('td');
+
+ if(aElements.length==0){
+
+
+
+  await send(doclist,page,0,j)
+
+return;
+
+
+
+
+
+ }
 }catch(err){
 
 
 
 
 
-console.error(err)
+
 await send(doclist,page,0,j)
 return;
 
