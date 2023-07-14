@@ -100,7 +100,7 @@ url
 ());
 
 
-if(page.url.toString()=='https://mail.guc.edu.eg/owa/auth/logon.aspx?url=https%3a%2f%2fmail.guc.edu.eg%2fowa%2f%2522%2c%2520true)&reason=2'){
+if(page.url.toString()==='https://mail.guc.edu.eg/owa/auth/logon.aspx?url=https%3a%2f%2fmail.guc.edu.eg%2fowa%2f%2522%2c%2520true)&reason=2'){
 
 console.log('here')
 throw new Error()
