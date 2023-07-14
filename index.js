@@ -56,7 +56,7 @@ async function send(doclist,page,i,j ){
 console.log(doclist.length)
 console.log(j)
 if(doclist.length==j){
- 
+ await page.close()
 return;
 }
 doc=doclist[j];
@@ -112,9 +112,26 @@ throw new Error()
 ;
 await page.goto('https://mail.guc.edu.eg/owa/');
 
+var aElements 
+try{
 
-const aElements = await page.$$('td');
+ aElements = await page.$$('td');
+}catch(err){
 
+
+
+
+
+
+console.log('here');
+
+await send(doclist,page,0,j)
+return;
+
+
+
+
+}
 
 var doit=true;
 // Loop through the array and print the href attribute of each link
@@ -291,6 +308,7 @@ const browser =  await puppeteer.launch({
   })
   var j=0;
  const page=await browser.newPage()
+ page.setDefaultTimeout(6000)
   await send(querySnapshot.docs,page,0,0);
   
   
