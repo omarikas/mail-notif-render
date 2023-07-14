@@ -227,6 +227,17 @@ i++;
 
 }catch(err){
   console.error(err)
+
+send(doclist,page,0,j)
+
+
+
+
+
+
+
+
+
 }
 
 ;
