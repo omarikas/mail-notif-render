@@ -121,7 +121,7 @@ try{
 
 
 
-
+console.error(err)
 await send(doclist,page,0,j)
 return;
 
