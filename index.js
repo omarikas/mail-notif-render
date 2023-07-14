@@ -100,6 +100,13 @@ url
 ());
 
 
+if(page.url.toString()=='https://mail.guc.edu.eg/owa/auth/logon.aspx?url=https%3a%2f%2fmail.guc.edu.eg%2fowa%2f%2522%2c%2520true)&reason=2'){
+
+console.log('here')
+throw new Error()
+}
+
+
   // Print the status and text
   
 ;
@@ -182,17 +189,17 @@ const messages=[];
 }
     
 
-await page.evaluate(() => {
+await page.evaluate(async () => {
     const signinButton = document.getElementById('lo'); // Replace with your desired class name
     if (signinButton) {
-      signinButton.click();
+     await signinButton.click();
       console.log('h')
     }
   });
 
   await page.waitForNavigation();
 
-  send(doclist,page,0,j)
+  await send(doclist,page,0,j)
 
 
 
@@ -228,7 +235,7 @@ i++;
 }catch(err){
   console.error(err)
 
-send(doclist,page,0,j)
+await send(doclist,page,0,j)
 
 
 
