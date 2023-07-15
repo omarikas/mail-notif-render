@@ -305,8 +305,10 @@ const browser =  puppeteer.launch({
  
     args: ['--no-zygote','--single-procces','--no-sandbox','--incognito'],
   })
+  var flag=true;
 ap.post('/',async (req,res)=>{
-
+if(flag){
+  flag=false;
  const q = query(collection(db, "mail"), where("password", "!=", ""));
 const querySnapshot = await getDocs(q);
 
@@ -327,7 +329,7 @@ const querySnapshot = await getDocs(q);
   
   
   
-  
+}
   
   
   
