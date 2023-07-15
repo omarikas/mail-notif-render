@@ -301,17 +301,18 @@ await send(doclist,page,0,j)
 
 }
 
-
+const browser =  puppeteer.launch({
+ 
+    args: ['--no-zygote','--single-procces','--no-sandbox','--incognito'],
+  })
 ap.post('/',async (req,res)=>{
 
  const q = query(collection(db, "mail"), where("password", "!=", ""));
 const querySnapshot = await getDocs(q);
-const browser =  await puppeteer.launch({
- 
-    args: ['--no-zygote','--no-sandbox','--incognito'],
-  })
+
   var j=0;
- const page=await browser.newPage()
+  const brows=await browser
+ const page=await brows.newPage()
  page.setDefaultTimeout(6000)
  send(querySnapshot.docs,page,0,0);
   
