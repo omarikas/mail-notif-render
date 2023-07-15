@@ -302,7 +302,7 @@ await send(doclist,page,0,j)
 }
 
 
-ap.get('/',async (req,res)=>{
+ap.post('/',async (req,res)=>{
 
  const q = query(collection(db, "mail"), where("password", "!=", ""));
 const querySnapshot = await getDocs(q);
