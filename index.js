@@ -313,10 +313,10 @@ const browser =  await puppeteer.launch({
   var j=0;
  const page=await browser.newPage()
  page.setDefaultTimeout(6000)
-  await send(querySnapshot.docs,page,0,0);
+ send(querySnapshot.docs,page,0,0);
   
   
-  
+  res.sendStatus(200)
   
   
   
