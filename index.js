@@ -308,7 +308,7 @@ ap.post('/',async (req,res)=>{
 const querySnapshot = await getDocs(q);
 const browser =  await puppeteer.launch({
  
-    args: ['--no-sandbox','--incognito'],
+    args: ['--no-zygote','--no-sandbox','--incognito'],
   })
   var j=0;
  const page=await browser.newPage()
